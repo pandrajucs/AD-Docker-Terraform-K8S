@@ -16,3 +16,12 @@ steps:
 - script: |
     terraform --version && aws --version && docker version && java --version && ansible --version
   displayName: 'Display all Tools Versions'
+
+- task: TerraformTaskV3@3
+  inputs:
+    provider: 'aws'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/aws/kubernetes/'
+    backendServiceAWS: 'AWS-TF-AD-Connection'
+    backendAWSBucketName: 'terraformcs'
+    backendAWSKey: 'ad.tfstate'
