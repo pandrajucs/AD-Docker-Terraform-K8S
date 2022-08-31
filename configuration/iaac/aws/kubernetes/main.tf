@@ -7,43 +7,43 @@
 
 terraform {
   backend "s3" {
-    bucket = "mybucket" # Will be overridden from build
+    bucket = "mybucket"       # Will be overridden from build
     key    = "path/to/my/key" # Will be overridden from build
     region = "us-east-1"
   }
 }
 
-resource "aws_default_vpc" "default" {
+# resource "aws_default_vpc" "default" {
 
-}
+# }
 
-data "aws_subnet_ids" "subnets" {
-  vpc_id = aws_default_vpc.default.id
-}
+# data "aws_subnet_ids" "subnets" {
+#   vpc_id = aws_default_vpc.default.id
+# }
 
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
   load_config_file       = false
- // version                = "~> 1.9"
+  // version                = "~> 1.9"
 }
 
 module "in28minutes-cluster" {
   source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = "in28minutes-cluster"
+  cluster_name    = "aws-cluster"
   cluster_version = "1.17"
-  subnets         = ["subnet-3f7b2563", "subnet-4a7d6a45", "subnet-ab24e9f7"] #CHANGE # Donot choose subnet from us-east-1e
+  subnets         = ["subnet-0882f799e47d9f14e", "subnet-0ba1a58394beddf7a", "subnet-02702f0c447b5f096"] #CHANGE # Donot choose subnet from us-east-1e
   #subnets = data.aws_subnet_ids.subnets.ids
-  vpc_id          = aws_default_vpc.default.id
-  #vpc_id         = "vpc-1234556abcdef"
+  #vpc_id          = aws_default_vpc.default.id
+  vpc_id = "vpc-07d0c0050cad2836a"
 
   node_groups = [
     {
-      instance_type = "t2.micro"
-      max_capacity  = 5
+      instance_type    = "t2.micro"
+      max_capacity     = 5
       desired_capacity = 3
-      min_capacity  = 3
+      min_capacity     = 3
     }
   ]
 }
@@ -78,5 +78,5 @@ resource "kubernetes_cluster_role_binding" "example" {
 
 # Needed to set the default region
 provider "aws" {
-  region  = "us-east-1"
+  region = "us-east-1"
 }
