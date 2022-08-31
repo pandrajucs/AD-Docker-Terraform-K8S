@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: AWSPool
+  name: AWSPool
 
 steps:
 - script: echo Hello, world!
