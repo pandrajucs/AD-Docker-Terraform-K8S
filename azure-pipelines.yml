@@ -25,3 +25,9 @@ steps:
     backendServiceAWS: 'AWS-TF-AD-Connection'
     backendAWSBucketName: 'terraformcs'
     backendAWSKey: 'ad.tfstate'
+
+- task: TerraformTaskV3@3
+  inputs:
+    provider: 'aws'
+    command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/aws/kubernetes/'
